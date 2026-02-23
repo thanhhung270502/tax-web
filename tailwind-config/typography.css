@@ -1,0 +1,69 @@
+@utility heading-sm {
+  font-family: var(--font-family-base);
+  font-size: var(--font-size-xl);
+  line-height: var(--line-height-xl);
+  font-weight: var(--font-weight-semibold);
+}
+
+@utility heading-md {
+  font-family: var(--font-family-base);
+  font-size: var(--font-size-2xl);
+  line-height: var(--line-height-2xl);
+  font-weight: var(--font-weight-semibold);
+}
+
+@utility heading-lg {
+  font-family: var(--font-family-base);
+  font-size: var(--font-size-3xl);
+  line-height: var(--line-height-3xl);
+  font-weight: var(--font-weight-semibold);
+}
+
+@utility heading-xl {
+  font-family: var(--font-family-base);
+  font-size: var(--font-size-4xl);
+  line-height: var(--line-height-4xl);
+  font-weight: var(--font-weight-semibold);
+}
+
+/* Typography - Body Styles */
+@utility body-xs {
+  font-family: var(--font-family-base);
+  font-size: var(--font-size-xs);
+  line-height: var(--line-height-xs);
+}
+
+@utility body-sm {
+  font-family: var(--font-family-base);
+  font-size: var(--font-size-sm);
+  line-height: var(--line-height-sm);
+}
+
+@utility body-md {
+  font-family: var(--font-family-base);
+  font-size: var(--font-size-md);
+  line-height: var(--line-height-md);
+}
+
+@utility body-lg {
+  font-family: var(--font-family-base);
+  font-size: var(--font-size-lg);
+  line-height: var(--line-height-lg);
+}
+
+/* Font Weight Modifiers */
+@utility font-regular {
+  font-weight: var(--font-weight-regular);
+}
+
+@utility font-medium {
+  font-weight: var(--font-weight-medium);
+}
+
+@utility font-semibold {
+  font-weight: var(--font-weight-semibold);
+}
+
+@utility font-bold {
+  font-weight: var(--font-weight-bold);
+}
