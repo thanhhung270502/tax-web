@@ -21,7 +21,7 @@ export const OtpStepPage = (props: OtpStepPageProps) => {
           <Typography variant="heading-xl" weight="semibold">
             Verify Email
           </Typography>
-          <Typography variant="body-lg" color="secondary">
+          <Typography variant="body-lg" color="secondary" className="text-center">
             We sent a code to{" "}
             <Typography as="span" variant="body-lg" color="secondary" weight="semibold">
               {email}

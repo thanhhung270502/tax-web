@@ -16,11 +16,11 @@ const dimensions = "max-h-[calc(100vh-300px)] overflow-y-auto";
 
 type ProfileFormProps = UseProfileReturn;
 
-export const ProfileForm = ({ methods, onSubmit }: ProfileFormProps) => {
+export const ProfileForm = ({ methods, onSubmit, isSubmitting }: ProfileFormProps) => {
   return (
     <FormProvider formMethods={methods} onSubmit={onSubmit}>
       <div className={cn("gap-2xl px-6xl py-4xl flex flex-col", dimensions)}>
-        <div className="gap-2xl grid grid-cols-2">
+        <div className="gap-2xl grid grid-cols-1 sm:grid-cols-2">
           <RHFSelect
             name="accountType"
             control={methods.control}
@@ -117,10 +117,9 @@ export const ProfileForm = ({ methods, onSubmit }: ProfileFormProps) => {
           placeholder="Enter your zipcode"
           size="sm"
         />
-        {/* <Button type="submit">Submit</Button> */}
       </div>
       <div className="px-6xl py-4xl border-secondary border-t">
-        <Button variant="contained-secondary" className="w-full">
+        <Button variant="contained-secondary" className="w-full" loading={isSubmitting}>
           Submit
         </Button>
       </div>

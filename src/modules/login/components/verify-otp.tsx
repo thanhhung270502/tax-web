@@ -1,6 +1,6 @@
 "use client";
 
-import { useCallback, useEffect, useRef } from "react";
+import { useCallback, useEffect, useRef, useState } from "react";
 import { useWatch } from "react-hook-form";
 import { useRouter } from "@bprogress/next/app";
 import { EmailHandlerAction } from "@common";
@@ -22,6 +22,7 @@ export const VerifyOtp = ({ methods, setStep }: VerifyOtpProps) => {
   const isVerifyingRef = useRef(false);
   const containerRef = useRef<HTMLDivElement>(null);
   const router = useRouter();
+  const [isVerifying, setIsVerifying] = useState(false);
 
   const profileHandlerMutation = useProfileHandlerMutation();
 
@@ -61,6 +62,7 @@ export const VerifyOtp = ({ methods, setStep }: VerifyOtpProps) => {
 
   const handleVerifyOtp = useCallback(async () => {
     try {
+      setIsVerifying(true);
       const response = await profileHandlerMutation.mutateAsync({
         action: EmailHandlerAction.VERIFY_OTP,
         email: methods.getValues("email"),
@@ -77,6 +79,7 @@ export const VerifyOtp = ({ methods, setStep }: VerifyOtpProps) => {
         }
         setTimeout(() => {
           isVerifyingRef.current = false;
+          setIsVerifying(false);
         }, 100);
         router.push(ClientRoutes.Profile);
         methods.reset();
@@ -84,12 +87,14 @@ export const VerifyOtp = ({ methods, setStep }: VerifyOtpProps) => {
         setTimeout(() => {
           methods.setValue("otp", ["", "", "", "", "", ""]);
           isVerifyingRef.current = false;
+          setIsVerifying(false);
         }, 100);
       }
     } catch (error) {
       setTimeout(() => {
         methods.setValue("otp", ["", "", "", "", "", ""]);
         isVerifyingRef.current = false;
+        setIsVerifying(false);
       }, 100);
       logger.error(`Failed to verify OTP: ${error}`);
     }
@@ -100,7 +105,10 @@ export const VerifyOtp = ({ methods, setStep }: VerifyOtpProps) => {
     const currentOtp = otp.join("");
     if (currentOtp.length === 6 && !isVerifyingRef.current) {
       isVerifyingRef.current = true;
-      handleVerifyOtp();
+      // Defer to next tick to avoid cascading renders
+      setTimeout(() => {
+        handleVerifyOtp();
+      }, 0);
     }
   }, [handleVerifyOtp, otp]);
 
@@ -121,13 +129,13 @@ export const VerifyOtp = ({ methods, setStep }: VerifyOtpProps) => {
             onChange={(e) => handleInputChange(index, e.target.value)}
             onKeyDown={(e) => handleKeyDown(index, e)}
             className={cn(
-              "border-secondary flex size-14 items-center justify-center rounded-lg border-2 bg-white text-center text-2xl font-bold transition-all outline-none"
-              // errorMessage ? "focus:border-error-subtle" : "focus:border-primary",
-              // errorMessage && pin[index] === "" && "border-error"
+              "border-secondary flex size-10 items-center justify-center rounded-lg border-2 bg-white text-center text-lg font-bold transition-all outline-none sm:size-14 sm:text-2xl",
+              isVerifying && "bg-secondary text-quaternary"
             )}
             inputMode="numeric"
             autoComplete="off"
             maxLength={1}
+            disabled={isVerifying}
           />
         ))}
       </div>
@@ -137,13 +145,14 @@ export const VerifyOtp = ({ methods, setStep }: VerifyOtpProps) => {
   return (
     <div className="gap-2xl flex flex-col items-center justify-center">
       {renderOtpDisplay()}
-      <Timer />
+      <Timer disabled={isVerifying} />
       <Button
         type="button"
         variant="text-gray"
         className="font-regular hover:text-gray-hover w-full hover:bg-transparent hover:underline"
         onClick={handleBackToEmail}
         startIcon={ArrowLeftIcon}
+        disabled={isVerifying}
       >
         Back to Email
       </Button>

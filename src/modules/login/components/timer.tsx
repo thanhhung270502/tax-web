@@ -2,9 +2,9 @@
 
 import { useEffect, useState } from "react";
 
-import { Typography } from "@/shared";
+import { Button, Typography } from "@/shared";
 
-export const Timer = () => {
+export const Timer = ({ disabled }: { disabled: boolean }) => {
   const [timer, setTimer] = useState(60);
 
   const handleResend = () => {
@@ -28,13 +28,13 @@ export const Timer = () => {
     );
   }
   return (
-    <Typography
-      variant="body-md"
-      weight="semibold"
-      className="text-brand-secondary cursor-pointer text-center hover:underline"
+    <Button
+      variant="text-secondary"
+      className="cursor-pointer text-center hover:bg-transparent hover:underline"
       onClick={handleResend}
+      disabled={disabled}
     >
       Resend Code
-    </Typography>
+    </Button>
   );
 };
