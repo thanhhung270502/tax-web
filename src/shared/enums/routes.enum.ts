@@ -7,4 +7,5 @@ export enum RouteKey {
 
 export enum SearchParams {
   Query = "q",
+  View = "view",
 }

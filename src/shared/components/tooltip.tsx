@@ -93,7 +93,7 @@ const tooltipContentVariants = cva(
     variants: {
       variant: {
         light: "bg-white text-secondary",
-        dark: "bg-fg-primary text-placeholder-subtle",
+        dark: "bg-neutral-900 text-placeholder-subtle",
       },
     },
     defaultVariants: {

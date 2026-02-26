@@ -9,7 +9,7 @@ import { StorageService } from "@/shared/services";
 import { ProfileForm } from "../components";
 import { useProfile } from "../hooks";
 
-export const ProfilePage = () => {
+export const NewProfilePage = () => {
   const methods = useProfile();
   const router = useRouter();
 

@@ -1,7 +1,5 @@
-import { redirect } from "next/navigation";
-
-import { ClientRoutes } from "@/shared";
+import { MainDemoPage } from "@/modules/main";
 
 export default function Page() {
-  redirect(ClientRoutes.Login);
+  return <MainDemoPage />;
 }

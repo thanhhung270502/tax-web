@@ -1,15 +1,15 @@
 import type {
-  GetProfileRequest,
-  GetProfileResponse,
-  SaveProfileRequest,
-  SaveProfileResponse,
+  GetTaxYearsRequest,
+  GetTaxYearsResponse,
+  SaveTaxYearsRequest,
+  SaveTaxYearsResponse,
 } from "@common";
 
 import { postRequest } from "@/libs/api-client";
 
 import { ClientAPIRoutes } from "../constants";
 
-export const saveProfile = async (data: SaveProfileRequest): Promise<SaveProfileResponse> => {
+export const getTaxYears = async (data: GetTaxYearsRequest): Promise<GetTaxYearsResponse> => {
   const response = await postRequest({
     path: ClientAPIRoutes.PROFILE_HANDLER.baseRoute(),
     data,
@@ -17,7 +17,7 @@ export const saveProfile = async (data: SaveProfileRequest): Promise<SaveProfile
   return response.data;
 };
 
-export const getProfile = async (data: GetProfileRequest): Promise<GetProfileResponse> => {
+export const saveTaxYears = async (data: SaveTaxYearsRequest): Promise<SaveTaxYearsResponse> => {
   const response = await postRequest({
     path: ClientAPIRoutes.PROFILE_HANDLER.baseRoute(),
     data,

@@ -1,65 +1,139 @@
-// {
-//   "success": true,
-//   "message": "OTP sent successfully",
-//   "expiresIn": 300
-// }
-
-// {
-//   "success": true,
-//   "message": "OTP verified successfully",
-//   "sessionToken": "2300e887-34a2-45e1-bc72-a55fac12b3c1"
-// }
-
-// {
-//   "success": true,
-//   "message": "Profile saved successfully",
-//   "isUpdate": true
-// }
-
-export type ProfileHandlerResponse = {
-  success: boolean;
-  message?: string;
-  error?: string;
-  expiresIn?: number;
-  sessionToken?: string;
-  isUpdate?: boolean;
-};
-
 export enum EmailHandlerAction {
   SEND_OTP = "sendOTP",
   VERIFY_OTP = "verifyOTP",
   SAVE_PROFILE = "saveProfile",
 }
 
-export type EmailHandlerRequest = {
+export type BaseHandlerRequest = {
+  action: EmailHandlerAction;
+};
+
+export type BaseAuthHandlerRequest = BaseHandlerRequest & {
+  email: string;
+  sessionToken: string;
+};
+
+// ------- Auth Actions -------
+
+export type SendOTPRequest = BaseHandlerRequest & {
   email: string;
 };
 
-export type VerifyOTPRequest = {
+export type SendOTPResponse = {
+  success: boolean;
+  message?: string;
+  error?: string;
+  expiresIn?: number;
+};
+
+export type VerifyOTPRequest = BaseHandlerRequest & {
   email: string;
   otp: string;
 };
 
-export type SaveProfileRequest = {
+export type VerifyOTPResponse = {
+  success: boolean;
+  message?: string;
+  error?: string;
   sessionToken: string;
-  email: string;
-  profile: {
-    accountType: string;
-    language: string;
-    firstName: string;
-    lastName: string;
-    phone: string;
-    ssn: string;
-    dob: string;
-    filingStatus: string;
-    country: string;
-    address: string;
-    state: string;
-    city: string;
-    zipcode: string;
-  };
+  hasProfile: boolean;
 };
 
-export type ProfileHandlerRequest = {
-  action: EmailHandlerAction;
-} & (EmailHandlerRequest | VerifyOTPRequest | SaveProfileRequest);
+// ------- Profile Actions -------
+
+export type UserProfile = {
+  accountType: string;
+  language: string;
+  firstName: string;
+  lastName: string;
+  phone: string;
+  ssn: string;
+  dob: string;
+  filingStatus: string;
+  country: string;
+  address: string;
+  state: string;
+  city: string;
+  zipcode: string;
+};
+
+export type SaveProfileRequest = BaseHandlerRequest & {
+  sessionToken: string;
+  email: string;
+  profile: UserProfile;
+};
+
+export type SaveProfileResponse = {
+  success: boolean;
+  message?: string;
+  error?: string;
+  isUpdate: boolean;
+};
+
+export type GetProfileRequest = BaseAuthHandlerRequest;
+
+export type GetProfileResponse = {
+  success: boolean;
+  profile: UserProfile;
+};
+
+// ------- Tax Actions -------
+export type GetTaxYearsRequest = BaseAuthHandlerRequest;
+
+export type GetTaxYearsResponse = {
+  success: boolean;
+  years: number[];
+};
+
+export type SaveTaxYearsRequest = BaseAuthHandlerRequest & {
+  years: number[];
+};
+
+export type SaveTaxYearsResponse = {
+  success: boolean;
+  message?: string;
+  error?: string;
+  folders: Array<{
+    id: string;
+    name: string;
+  }>;
+  rootFolderId: string;
+};
+
+// ------- Drive Actions -------
+export type GetListFoldersRequest = BaseAuthHandlerRequest;
+
+export type FolderItem = {
+  id: string;
+  name: string;
+  type: string;
+  createdAt: string;
+  updatedAt: string;
+};
+
+export type GetListFoldersResponse = {
+  success: boolean;
+  folderId: string;
+  folderName: string;
+  parentId: string;
+  items: Array<FolderItem>;
+};
+
+// ------- Profile Handler -------
+export type ProfileHandlerRequest =
+  | SendOTPRequest
+  | VerifyOTPRequest
+  | SaveProfileRequest
+  | GetProfileRequest
+  | GetTaxYearsRequest
+  | SaveTaxYearsRequest
+  | GetListFoldersRequest;
+
+export type ProfileHandlerResponse =
+  | SendOTPResponse
+  | VerifyOTPResponse
+  | SaveProfileResponse
+  | GetProfileResponse
+  | GetTaxYearsResponse
+  | SaveTaxYearsResponse
+  | GetListFoldersResponse;

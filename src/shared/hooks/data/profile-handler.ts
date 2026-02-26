@@ -1,21 +1,41 @@
-import type { ProfileHandlerRequest, ProfileHandlerResponse } from "@common";
+import type { GetProfileRequest, ProfileHandlerResponse, SaveProfileRequest } from "@common";
 import { toast } from "sonner";
 
-import { profileHandler } from "@/shared/apis";
+import { getProfile, saveProfile } from "@/shared/apis";
 import type { MutationProps } from "@/shared/utils";
 import { asError, useMutation } from "@/shared/utils";
 
-// ------- API_PROFILE_HANDLER -------
-type ProfileHandlerMutationProps = MutationProps<ProfileHandlerResponse, ProfileHandlerRequest>;
+// ------- Save Profile -------
+type SaveProfileMutationProps = MutationProps<ProfileHandlerResponse, SaveProfileRequest>;
 
-export const useProfileHandlerMutation = (props: ProfileHandlerMutationProps = {}) => {
+export const useSaveProfileMutation = (props: SaveProfileMutationProps = {}) => {
   return useMutation({
-    mutationFn: profileHandler,
+    mutationFn: saveProfile,
     onSuccess: async (response) => {
       if (response.success) {
         toast.success(response.message);
       } else {
         toast.error(response.error);
+      }
+    },
+    onError: (error) => {
+      toast.error(asError(error).message);
+    },
+    ...props,
+  });
+};
+
+// ------- Get Profile -------
+type GetProfileMutationProps = MutationProps<ProfileHandlerResponse, GetProfileRequest>;
+
+export const useGetProfileMutation = (props: GetProfileMutationProps = {}) => {
+  return useMutation({
+    mutationFn: getProfile,
+    onSuccess: async (response) => {
+      if (response.success) {
+        toast.success("Profile fetched successfully");
+      } else {
+        toast.error("Failed to fetch profile");
       }
     },
     onError: (error) => {

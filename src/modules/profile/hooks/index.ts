@@ -8,7 +8,7 @@ import { toast } from "sonner";
 import { z } from "zod";
 
 import { logger } from "@/libs/logger";
-import { ClientRoutes, STORAGE_KEYS, useProfileHandlerMutation } from "@/shared";
+import { ClientRoutes, STORAGE_KEYS, useSaveProfileMutation } from "@/shared";
 import { StorageService } from "@/shared/services";
 import type { TLoginSession } from "@/shared/types";
 
@@ -52,7 +52,7 @@ export const useProfile = () => {
     },
   });
 
-  const profileHandlerMutation = useProfileHandlerMutation();
+  const saveProfileMutation = useSaveProfileMutation();
 
   const onSubmit = methods.handleSubmit(async (data) => {
     const loginSession = StorageService.getItem(STORAGE_KEYS.LOGIN_SESSION.key);
@@ -71,6 +71,7 @@ export const useProfile = () => {
     }
     try {
       const request: SaveProfileRequest = {
+        action: EmailHandlerAction.SAVE_PROFILE,
         sessionToken: loginSessionData.sessionToken,
         email: loginSessionData.email,
         profile: {
@@ -89,18 +90,15 @@ export const useProfile = () => {
           zipcode: data.zipcode,
         },
       };
-      const response = await profileHandlerMutation.mutateAsync({
-        action: EmailHandlerAction.SAVE_PROFILE,
-        ...request,
-      });
+      const response = await saveProfileMutation.mutateAsync(request);
       if (response.success) {
         StorageService.removeItem(STORAGE_KEYS.LOGIN_SESSION.key);
         router.push(ClientRoutes.Login);
       }
     } catch (error) {
-      logger.error(`Failed to send OTP: ${error}`);
+      logger.error(`Failed to save profile: ${error}`);
     }
   });
 
-  return { methods, onSubmit, isSubmitting: profileHandlerMutation.isPending };
+  return { methods, onSubmit, isSubmitting: saveProfileMutation.isPending };
 };

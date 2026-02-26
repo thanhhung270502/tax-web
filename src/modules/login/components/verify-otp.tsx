@@ -8,8 +8,9 @@ import { ArrowLeftIcon } from "@phosphor-icons/react";
 import { cn } from "@tailwind-config/utils/cn";
 
 import { logger } from "@/libs/logger";
-import { Button, ClientRoutes, STORAGE_KEYS, useProfileHandlerMutation } from "@/shared";
+import { Button, ClientRoutes, STORAGE_KEYS, useVerifyOTPMutation } from "@/shared";
 import { StorageService } from "@/shared/services";
+import type { TLoginSession } from "@/shared/types";
 
 import { LoginSteps } from "../enums";
 import type { UseLoginReturn } from "../hooks";
@@ -24,7 +25,7 @@ export const VerifyOtp = ({ methods, setStep }: VerifyOtpProps) => {
   const router = useRouter();
   const [isVerifying, setIsVerifying] = useState(false);
 
-  const profileHandlerMutation = useProfileHandlerMutation();
+  const verifyOTPMutation = useVerifyOTPMutation();
 
   const otp = useWatch({ control: methods.control, name: "otp" });
 
@@ -63,17 +64,18 @@ export const VerifyOtp = ({ methods, setStep }: VerifyOtpProps) => {
   const handleVerifyOtp = useCallback(async () => {
     try {
       setIsVerifying(true);
-      const response = await profileHandlerMutation.mutateAsync({
+      const response = await verifyOTPMutation.mutateAsync({
         action: EmailHandlerAction.VERIFY_OTP,
         email: methods.getValues("email"),
         otp: otp.join(""),
       });
       if (response.success) {
         if (response.sessionToken) {
-          const value = {
+          const value: TLoginSession = {
             email: methods.getValues("email"),
             sessionToken: response.sessionToken,
-            expiresAt: new Date(Date.now() + 30 * 60 * 1000),
+            expiresAt: new Date(Date.now() + 24 * 60 * 60 * 1000), // 24 hours
+            hasProfile: response.hasProfile,
           };
           StorageService.setItem(STORAGE_KEYS.LOGIN_SESSION, value);
         }
@@ -81,8 +83,12 @@ export const VerifyOtp = ({ methods, setStep }: VerifyOtpProps) => {
           isVerifyingRef.current = false;
           setIsVerifying(false);
         }, 100);
-        router.push(ClientRoutes.Profile);
         methods.reset();
+        if (response.hasProfile) {
+          router.push(ClientRoutes.Home);
+        } else {
+          router.push(ClientRoutes.Profile);
+        }
       } else {
         setTimeout(() => {
           methods.setValue("otp", ["", "", "", "", "", ""]);
@@ -98,7 +104,7 @@ export const VerifyOtp = ({ methods, setStep }: VerifyOtpProps) => {
       }, 100);
       logger.error(`Failed to verify OTP: ${error}`);
     }
-  }, [methods, otp, profileHandlerMutation, router]);
+  }, [methods, otp, verifyOTPMutation, router]);
 
   // Auto-complete when OTP reaches 6 digits
   useEffect(() => {
