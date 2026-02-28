@@ -13,6 +13,7 @@ export const ClientRoutes: Record<RouteKey, string> = {
   [RouteKey.HOME]: "/home",
   [RouteKey.LOGIN]: "/login",
   [RouteKey.PROFILE]: "/profile",
+  [RouteKey.FOLDER]: "/folders/:folderId",
 };
 
 export const PUBLIC_ROUTE_KEYS: RouteKey[] = [RouteKey.LOGIN, RouteKey.PROFILE];

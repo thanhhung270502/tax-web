@@ -3,7 +3,7 @@
 import { useCallback, useEffect, useRef, useState } from "react";
 import { useWatch } from "react-hook-form";
 import { useRouter } from "@bprogress/next/app";
-import { EmailHandlerAction } from "@common";
+import { BaseHandlerAction } from "@common";
 import { ArrowLeftIcon } from "@phosphor-icons/react";
 import { cn } from "@tailwind-config/utils/cn";
 
@@ -65,7 +65,7 @@ export const VerifyOtp = ({ methods, setStep }: VerifyOtpProps) => {
     try {
       setIsVerifying(true);
       const response = await verifyOTPMutation.mutateAsync({
-        action: EmailHandlerAction.VERIFY_OTP,
+        action: BaseHandlerAction.VERIFY_OTP,
         email: methods.getValues("email"),
         otp: otp.join(""),
       });

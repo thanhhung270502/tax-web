@@ -1,26 +1,34 @@
-import type { GetListFoldersRequest, GetListFoldersResponse } from "@common";
-import { toast } from "sonner";
+import type {
+  GetBreadcrumbRequest,
+  GetBreadcrumbResponse,
+  GetListFoldersRequest,
+  GetListFoldersResponse,
+} from "@common";
 
-import { getListFolders } from "@/shared/apis";
-import type { MutationProps } from "@/shared/utils";
-import { asError, useMutation } from "@/shared/utils";
+import { getBreadcrumb, getListFolders } from "@/shared/apis";
+import { FOLDERS_KEYS } from "@/shared/constants";
+import type { QueryProps } from "@/shared/utils";
+import { useQuery } from "@/shared/utils";
 
 // ------- Get List Folders -------
-type GetListFoldersMutationProps = MutationProps<GetListFoldersResponse, GetListFoldersRequest>;
+type GetListFoldersProps = QueryProps<GetListFoldersResponse, GetListFoldersRequest>;
 
-export const useGetListFoldersMutation = (props: GetListFoldersMutationProps = {}) => {
-  return useMutation({
-    mutationFn: getListFolders,
-    onSuccess: async (response) => {
-      if (response.success) {
-        toast.success("List folders fetched successfully");
-      } else {
-        toast.error("Failed to fetch list folders");
-      }
-    },
-    onError: (error) => {
-      toast.error(asError(error).message);
-    },
+export const useGetListFolders = (props: GetListFoldersProps) => {
+  const { folderId } = props.input;
+  return useQuery({
+    queryKey: folderId ? FOLDERS_KEYS.detail(folderId) : FOLDERS_KEYS.lists(),
+    queryFn: () => getListFolders(props.input),
+    ...props,
+  });
+};
+
+type GetBreadcrumbProps = QueryProps<GetBreadcrumbResponse, GetBreadcrumbRequest>;
+
+export const useGetBreadcrumbs = (props: GetBreadcrumbProps) => {
+  const { folderId } = props.input;
+  return useQuery({
+    queryKey: folderId ? FOLDERS_KEYS.breadcrumb(folderId) : FOLDERS_KEYS.breadcrumbs(),
+    queryFn: () => getBreadcrumb(props.input),
     ...props,
   });
 };

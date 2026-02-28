@@ -16,6 +16,7 @@ export * from "./separator";
 export * from "./sheet";
 export * from "./sidebar";
 export * from "./skeleton";
+export * from "./spinner";
 export * from "./toast";
 export * from "./tooltip";
 export * from "./typography";

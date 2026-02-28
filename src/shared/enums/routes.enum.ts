@@ -3,6 +3,7 @@ export enum RouteKey {
   HOME = "Home",
   LOGIN = "Login",
   PROFILE = "Profile",
+  FOLDER = "Folder",
 }
 
 export enum SearchParams {

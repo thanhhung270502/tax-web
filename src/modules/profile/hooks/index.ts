@@ -2,7 +2,7 @@
 
 import { useForm } from "react-hook-form";
 import { useRouter } from "@bprogress/next/app";
-import { EmailHandlerAction, type SaveProfileRequest } from "@common";
+import { BaseHandlerAction, type SaveProfileRequest } from "@common";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { toast } from "sonner";
 import { z } from "zod";
@@ -71,7 +71,7 @@ export const useProfile = () => {
     }
     try {
       const request: SaveProfileRequest = {
-        action: EmailHandlerAction.SAVE_PROFILE,
+        action: BaseHandlerAction.SAVE_PROFILE,
         sessionToken: loginSessionData.sessionToken,
         email: loginSessionData.email,
         profile: {

@@ -192,3 +192,12 @@
 @utility bg-quaternary {
   background-color: var(--color-neutral-200);
 }
+
+/* Background Gradient Colors */
+@utility bg-gradient-brand-primary {
+  background: linear-gradient(135deg, var(--color-brand-orange-400), var(--color-brand-orange-600));
+}
+
+@utility bg-gradient-brand-secondary {
+  background: linear-gradient(135deg, var(--color-blue-400), var(--color-blue-700));
+}

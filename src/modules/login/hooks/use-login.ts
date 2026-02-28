@@ -2,7 +2,7 @@
 
 import { useState } from "react";
 import { useForm } from "react-hook-form";
-import { EmailHandlerAction } from "@common";
+import { BaseHandlerAction } from "@common";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { z } from "zod";
 
@@ -34,7 +34,7 @@ export const useLogin = () => {
   const onSubmit = methods.handleSubmit(async (data) => {
     try {
       await sendOTPMutation.mutateAsync({
-        action: EmailHandlerAction.SEND_OTP,
+        action: BaseHandlerAction.SEND_OTP,
         email: data.email,
       });
       setStep(LoginSteps.OTP);

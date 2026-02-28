@@ -1,11 +1,16 @@
-export enum EmailHandlerAction {
+export enum BaseHandlerAction {
   SEND_OTP = "sendOTP",
   VERIFY_OTP = "verifyOTP",
   SAVE_PROFILE = "saveProfile",
+  GET_PROFILE = "getProfile",
+  GET_TAX_YEARS = "getTaxYears",
+  SAVE_TAX_YEARS = "saveTaxYears",
+  GET_LIST_FOLDERS = "listFolder",
+  GET_BREADCRUMBS = "getBreadcrumbs",
 }
 
 export type BaseHandlerRequest = {
-  action: EmailHandlerAction;
+  action: BaseHandlerAction;
 };
 
 export type BaseAuthHandlerRequest = BaseHandlerRequest & {
@@ -101,14 +106,16 @@ export type SaveTaxYearsResponse = {
 };
 
 // ------- Drive Actions -------
-export type GetListFoldersRequest = BaseAuthHandlerRequest;
+export type GetListFoldersRequest = BaseAuthHandlerRequest & {
+  folderId?: string;
+};
 
-export type FolderItem = {
+export type TFolderItem = {
   id: string;
   name: string;
   type: string;
   createdAt: string;
-  updatedAt: string;
+  updatedAt?: string;
 };
 
 export type GetListFoldersResponse = {
@@ -116,7 +123,31 @@ export type GetListFoldersResponse = {
   folderId: string;
   folderName: string;
   parentId: string;
-  items: Array<FolderItem>;
+  items: Array<TFolderItem>;
+};
+
+export type CreateFolderRequest = BaseAuthHandlerRequest & {
+  folderName: string;
+  parentFolderId: string;
+};
+
+export type CreateFolderResponse = {
+  success: boolean;
+  folder: TFolderItem;
+};
+
+export type GetBreadcrumbRequest = BaseAuthHandlerRequest & {
+  folderId?: string;
+};
+
+export type TBreadcrumbItem = {
+  id: string;
+  name: string;
+};
+
+export type GetBreadcrumbResponse = {
+  success: boolean;
+  breadcrumbs: Array<TBreadcrumbItem>;
 };
 
 // ------- Profile Handler -------
