@@ -3,7 +3,7 @@
 import { useRouter } from "@bprogress/next/app";
 import { BaseHandlerAction } from "@common";
 
-import { Breadcrumb, ClientRoutes, getDetailRoute, useGetBreadcrumbs } from "@/shared";
+import { Breadcrumb, ClientRoutes, getDetailRoute, Skeleton, useGetBreadcrumbs } from "@/shared";
 import type { TLoginSession } from "@/shared/types";
 
 type MainBreadcrumbProps = {
@@ -14,7 +14,7 @@ type MainBreadcrumbProps = {
 export const MainBreadcrumb = ({ folderId, loginSession }: MainBreadcrumbProps) => {
   const router = useRouter();
 
-  const { data } = useGetBreadcrumbs({
+  const { data, isLoading } = useGetBreadcrumbs({
     input: {
       action: BaseHandlerAction.GET_BREADCRUMBS,
       email: loginSession.email,
@@ -33,6 +33,10 @@ export const MainBreadcrumb = ({ folderId, loginSession }: MainBreadcrumbProps) 
     router.push(getDetailRoute(ClientRoutes.Folder, folderId));
   };
 
+  if (isLoading) {
+    return <Skeleton className="h-6 w-80" />;
+  }
+
   return (
     <Breadcrumb>
       {breadcrumbs.map((breadcrumb) => (
@@ -40,6 +44,7 @@ export const MainBreadcrumb = ({ folderId, loginSession }: MainBreadcrumbProps) 
           key={breadcrumb.id}
           onClick={() => handleNavigateToFolder(breadcrumb.id)}
           active={breadcrumb.active}
+          className="px-0"
         >
           {breadcrumb.name}
         </Breadcrumb.Item>

@@ -15,11 +15,11 @@ const ICON_SIZE = {
 };
 
 const TEXT_SIZE = {
-  xs: "body-sm" as const,
-  sm: "body-md" as const,
-  md: "body-lg" as const,
-  lg: "heading-sm" as const,
-  xl: "heading-md" as const,
+  xs: "body-xs" as const,
+  sm: "body-sm" as const,
+  md: "body-md" as const,
+  lg: "body-lg" as const,
+  xl: "heading-sm" as const,
 };
 
 type LoadingProps = {
@@ -39,7 +39,7 @@ export const Loading = ({
 }: LoadingProps) => {
   const renderIcon = createElement(CircleNotchIcon, {
     size: ICON_SIZE[size],
-    className: cn("animate-spin text-brand-primary", iconClassName),
+    className: cn("animate-spin text-brand-secondary", iconClassName),
     "aria-hidden": "true", // Icons are decorative when there's text
   });
   return (
@@ -48,7 +48,7 @@ export const Loading = ({
       {text && (
         <Typography
           variant={TEXT_SIZE[size]}
-          className={cn("text-brand-primary animate-bounce", textClassName)}
+          className={cn("text-brand-secondary animate-bounce", textClassName)}
         >
           {text}
         </Typography>

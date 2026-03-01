@@ -119,7 +119,7 @@ export const ProfileForm = ({ methods, onSubmit, isSubmitting }: ProfileFormProp
         />
       </div>
       <div className="px-6xl py-4xl border-secondary border-t">
-        <Button variant="contained-secondary" className="w-full" loading={isSubmitting}>
+        <Button variant="secondary" className="w-full" loading={isSubmitting}>
           Submit
         </Button>
       </div>

@@ -7,6 +7,11 @@ export enum BaseHandlerAction {
   SAVE_TAX_YEARS = "saveTaxYears",
   GET_LIST_FOLDERS = "listFolder",
   GET_BREADCRUMBS = "getBreadcrumbs",
+  UPLOAD_FILE = "uploadFile",
+  GET_LIST_FILES = "getAllFiles",
+  GET_FILE_PREVIEW = "getFilePreview",
+  DELETE_FILE = "deleteFile",
+  CREATE_FOLDER = "createFolder",
 }
 
 export type BaseHandlerRequest = {
@@ -106,29 +111,51 @@ export type SaveTaxYearsResponse = {
 };
 
 // ------- Drive Actions -------
-export type GetListFoldersRequest = BaseAuthHandlerRequest & {
+// Get list folders
+export type GetListItemsRequest = BaseAuthHandlerRequest & {
   folderId?: string;
+};
+
+export enum EFileOrFolderType {
+  FILE = "file",
+  FOLDER = "folder",
+}
+
+export type TFileItem = {
+  id: string;
+  name: string;
+  type: EFileOrFolderType.FILE;
+  mimeType: string;
+  createdAt: string;
+  updatedAt?: string;
+  size: number;
+  downloadUrl: string;
+  viewUrl?: string;
+  iconUrl: string;
 };
 
 export type TFolderItem = {
   id: string;
   name: string;
-  type: string;
+  type: EFileOrFolderType.FOLDER;
   createdAt: string;
   updatedAt?: string;
 };
+
+export type TFileOrFolderItem = TFileItem | TFolderItem;
 
 export type GetListFoldersResponse = {
   success: boolean;
   folderId: string;
   folderName: string;
   parentId: string;
-  items: Array<TFolderItem>;
+  items: Array<TFileOrFolderItem>;
 };
 
+// Create folder
 export type CreateFolderRequest = BaseAuthHandlerRequest & {
   folderName: string;
-  parentFolderId: string;
+  parentFolderId?: string;
 };
 
 export type CreateFolderResponse = {
@@ -136,6 +163,7 @@ export type CreateFolderResponse = {
   folder: TFolderItem;
 };
 
+// Get breadcrumb
 export type GetBreadcrumbRequest = BaseAuthHandlerRequest & {
   folderId?: string;
 };
@@ -150,6 +178,57 @@ export type GetBreadcrumbResponse = {
   breadcrumbs: Array<TBreadcrumbItem>;
 };
 
+// Upload file
+export type UploadFileRequest = BaseAuthHandlerRequest & {
+  folderId?: string;
+  fileName: string;
+  mimeType: string;
+  base64Data: string;
+};
+
+export type TUploadFileItem = {
+  id: string;
+  name: string;
+  mimeType: string;
+  size: number;
+  createdAt: string;
+  updatedAt?: string;
+};
+
+export type UploadFileResponse = {
+  success: boolean;
+  file: TUploadFileItem;
+};
+
+// Preview
+export type GetFilePreviewRequest = BaseAuthHandlerRequest & {
+  fileId: string;
+};
+
+export enum EFilePreviewType {
+  IMAGE = "image",
+  IFRAME = "iframe",
+  TEXT = "text",
+}
+
+export type GetFilePreviewResponse = {
+  success: boolean;
+  file: TFileItem;
+  previewType: EFilePreviewType;
+  previewData: string;
+};
+
+// Delete file
+export type DeleteFileRequest = BaseAuthHandlerRequest & {
+  fileId: string;
+};
+
+export type DeleteFileResponse = {
+  success: boolean;
+  message?: string;
+  error?: string;
+};
+
 // ------- Profile Handler -------
 export type ProfileHandlerRequest =
   | SendOTPRequest
@@ -158,7 +237,7 @@ export type ProfileHandlerRequest =
   | GetProfileRequest
   | GetTaxYearsRequest
   | SaveTaxYearsRequest
-  | GetListFoldersRequest;
+  | GetListItemsRequest;
 
 export type ProfileHandlerResponse =
   | SendOTPResponse

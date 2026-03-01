@@ -15,7 +15,7 @@ export const OtpStepPage = (props: OtpStepPageProps) => {
   const email = useWatch({ control: methods.control, name: "email" });
 
   return (
-    <CenterCard>
+    <CenterCard wrapperClassName="relative">
       <div className="gap-4xl flex flex-col">
         <div className="flex items-center justify-center">
           <Image src={"/images/ktancpa-logo.png"} alt="Reviva" width={100} height={28} priority />

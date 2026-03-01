@@ -1,3 +1,5 @@
+"use client";
+
 import type { ChangeEvent } from "react";
 import React from "react";
 import { UploadIcon } from "@phosphor-icons/react";
@@ -5,13 +7,13 @@ import { cn } from "@tailwind-config/utils/cn";
 import { toast } from "sonner";
 
 import { ACCEPT_FILE_TYPES } from "../constants";
-import type { FileSize } from "../types";
+import type { TFileSize } from "../types";
 import { checkFile, convertToAcceptFiles } from "../utils";
 import { Button, Typography } from "..";
 
 type UploadFilesProps = {
   acceptFileTypes?: string[];
-  maxSize?: FileSize;
+  maxSize?: TFileSize;
   onUploadFiles: (files: File[]) => void;
   showUploaded?: boolean;
   children?: React.ReactNode;

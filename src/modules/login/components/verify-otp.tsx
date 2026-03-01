@@ -8,7 +8,14 @@ import { ArrowLeftIcon } from "@phosphor-icons/react";
 import { cn } from "@tailwind-config/utils/cn";
 
 import { logger } from "@/libs/logger";
-import { Button, ClientRoutes, STORAGE_KEYS, useVerifyOTPMutation } from "@/shared";
+import {
+  Button,
+  ClientRoutes,
+  Loading,
+  STORAGE_KEYS,
+  Typography,
+  useVerifyOTPMutation,
+} from "@/shared";
 import { StorageService } from "@/shared/services";
 import type { TLoginSession } from "@/shared/types";
 
@@ -87,7 +94,7 @@ export const VerifyOtp = ({ methods, setStep }: VerifyOtpProps) => {
         if (response.hasProfile) {
           router.push(ClientRoutes.Home);
         } else {
-          router.push(ClientRoutes.Profile);
+          router.push(ClientRoutes.NewProfile);
         }
       } else {
         setTimeout(() => {
@@ -149,19 +156,31 @@ export const VerifyOtp = ({ methods, setStep }: VerifyOtpProps) => {
   };
 
   return (
-    <div className="gap-2xl flex flex-col items-center justify-center">
-      {renderOtpDisplay()}
-      <Timer disabled={isVerifying} />
-      <Button
-        type="button"
-        variant="text-gray"
-        className="font-regular hover:text-gray-hover w-full hover:bg-transparent hover:underline"
-        onClick={handleBackToEmail}
-        startIcon={ArrowLeftIcon}
-        disabled={isVerifying}
-      >
-        Back to Email
-      </Button>
-    </div>
+    <>
+      {isVerifying && (
+        <div className="absolute top-0 left-0 flex h-screen w-screen flex-col items-center justify-center bg-black/40">
+          <div className="size-20">
+            <Loading size="xl" iconClassName="text-white" />
+          </div>
+          <Typography className="animate-bounce text-white">
+            Processing... This may take a few moments
+          </Typography>
+        </div>
+      )}
+      <div className="gap-2xl flex flex-col items-center justify-center">
+        {renderOtpDisplay()}
+        <Timer disabled={isVerifying} />
+        <Button
+          type="button"
+          variant="text-gray"
+          className="font-regular hover:text-gray-hover w-full hover:bg-transparent hover:underline"
+          onClick={handleBackToEmail}
+          startIcon={ArrowLeftIcon}
+          disabled={isVerifying}
+        >
+          Back to Email
+        </Button>
+      </div>
+    </>
   );
 };

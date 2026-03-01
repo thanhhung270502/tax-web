@@ -1,4 +1,6 @@
-import type { FileSize } from "../types";
+import { FILE_UPLOAD } from "../constants";
+import type { EAllowedFileTypes } from "../enums";
+import type { TFileSize } from "../types";
 
 import { asError } from "./error.util";
 
@@ -62,7 +64,7 @@ export const convertToBytes = (size: number, unit: string) => {
   return size * unitValue;
 };
 
-export const isValidFileSize = (uploadFile: File, size: FileSize) => {
+export const isValidFileSize = (uploadFile: File, size: TFileSize) => {
   if (!uploadFile || uploadFile.size === undefined) {
     return false;
   }
@@ -86,7 +88,7 @@ export const checkFile = ({
 }: {
   file?: File;
   acceptFileTypes: string[];
-  maxSize?: FileSize;
+  maxSize?: TFileSize;
 }) => {
   if (!file) {
     return { isValid: false, error: "No files provided" };
@@ -144,4 +146,56 @@ export const base64ToFile = (base64: string, fileName: string, fileType: string)
   const blob = new Blob([byteArray], { type: fileType });
 
   return new File([blob], fileName, { type: fileType });
+};
+
+const ALLOWED_EXTENSIONS = FILE_UPLOAD.ACCEPT_ATTRIBUTE.split(",").map((ext) =>
+  ext.replace(".", "").toLowerCase()
+);
+
+/**
+ * Type guard to check if a MIME type is allowed for patient drive uploads
+ */
+export const isAllowedMimeType = (mimeType: string): mimeType is EAllowedFileTypes => {
+  return FILE_UPLOAD.ALLOWED_MIME_TYPES.includes(
+    mimeType as (typeof FILE_UPLOAD.ALLOWED_MIME_TYPES)[number]
+  );
+};
+
+/**
+ * Checks if a file type is allowed (by MIME type or extension fallback)
+ * Extension fallback is useful for drag & drop where MIME type may be empty
+ */
+export const isAllowedFileType = (file: File): boolean => {
+  // First check MIME type
+  if (isAllowedMimeType(file.type)) return true;
+
+  // Fallback to extension check (useful for drag & drop folders where MIME type may be empty)
+  const extension = getFileExtensionFromName(file.name);
+  return ALLOWED_EXTENSIONS.includes(extension);
+};
+
+/**
+ * Validates file size and type for patient drive uploads
+ */
+export const validateFile = (file: File): { valid: boolean; error?: string } => {
+  // Skip files with no size (likely directories)
+  if (file.size === 0) {
+    return { valid: false };
+  }
+
+  if (file.size > FILE_UPLOAD.MAX_FILE_SIZE_BYTES) {
+    return {
+      valid: false,
+      error: `exceeds ${FILE_UPLOAD.MAX_FILE_SIZE_DISPLAY} limit`,
+    };
+  }
+
+  if (!isAllowedFileType(file)) {
+    return {
+      valid: false,
+      error: "file type not supported",
+    };
+  }
+
+  return { valid: true };
 };

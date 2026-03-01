@@ -13,6 +13,8 @@ export const ClientRoutes: Record<RouteKey, string> = {
   [RouteKey.HOME]: "/home",
   [RouteKey.LOGIN]: "/login",
   [RouteKey.PROFILE]: "/profile",
+  [RouteKey.NEW_PROFILE]: "/profile/new",
+  [RouteKey.NEW_TAX]: "/profile/new/tax",
   [RouteKey.FOLDER]: "/folders/:folderId",
 };
 
