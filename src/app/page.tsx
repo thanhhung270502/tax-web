@@ -1,7 +1,14 @@
+"use client";
+
 import { redirect } from "next/navigation";
 
-import { ClientRoutes } from "@/shared";
+import { ClientRoutes, STORAGE_KEYS } from "@/shared";
+import { StorageService } from "@/shared/services";
 
 export default function Page() {
-  redirect(ClientRoutes.Login);
+  const loginSession = StorageService.getItem(STORAGE_KEYS.LOGIN_SESSION.key);
+  if (loginSession.isEmpty) {
+    redirect(ClientRoutes.Login);
+  }
+  redirect(ClientRoutes.Home);
 }

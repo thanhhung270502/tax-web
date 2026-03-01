@@ -1,7 +1,7 @@
 export const STORAGE_KEYS = {
   LOGIN_SESSION: {
     key: "loginSession",
-    expiryTimeInMs: 30 * 60 * 1000, // 30 minutes
+    expiryTimeInMs: 24 * 60 * 60 * 1000, // 24 hours
   },
 };
 

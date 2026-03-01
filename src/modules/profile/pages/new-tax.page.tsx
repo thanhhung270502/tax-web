@@ -1,24 +1,32 @@
 "use client";
 
-import { useEffect } from "react";
-import { useRouter } from "@bprogress/next/app";
+import { useEffect, useState } from "react";
+import { redirect } from "next/navigation";
 
 import { CenterCard, ClientRoutes, Separator, STORAGE_KEYS, Typography } from "@/shared";
 import { StorageService } from "@/shared/services";
+import type { TLoginSession } from "@/shared/types";
 
-import { ProfileForm } from "../components";
-import { useProfile } from "../hooks";
+import { CreateYearsFolder } from "../components/create-years-folder";
 
-export const ProfilePage = () => {
-  const methods = useProfile();
-  const router = useRouter();
+export const NewTaxPage = () => {
+  const [loginSessionData, setLoginSessionData] = useState<TLoginSession | null>(null);
 
   useEffect(() => {
     const loginSession = StorageService.getItem(STORAGE_KEYS.LOGIN_SESSION.key);
     if (loginSession.isEmpty) {
-      router.push(ClientRoutes.Login);
+      redirect(ClientRoutes.Login);
     }
-  }, [router]);
+
+    const loginSessionData = loginSession.value
+      ? (loginSession.value as unknown as TLoginSession)
+      : null;
+
+    if (!loginSessionData) {
+      redirect(ClientRoutes.Login);
+    }
+    setLoginSessionData(loginSessionData);
+  }, []);
 
   return (
     <CenterCard className="max-w-full p-0!" wrapperClassName="bg-secondary p-8xl">
@@ -34,7 +42,7 @@ export const ProfilePage = () => {
 
         <Separator />
 
-        <ProfileForm {...methods} />
+        {loginSessionData && <CreateYearsFolder loginSession={loginSessionData} />}
       </div>
     </CenterCard>
   );

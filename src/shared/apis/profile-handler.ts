@@ -1,12 +1,23 @@
-import type { ProfileHandlerRequest, ProfileHandlerResponse } from "@common";
+import type {
+  GetProfileRequest,
+  GetProfileResponse,
+  SaveProfileRequest,
+  SaveProfileResponse,
+} from "@common";
 
 import { postRequest } from "@/libs/api-client";
 
 import { ClientAPIRoutes } from "../constants";
 
-export const profileHandler = async (
-  data: ProfileHandlerRequest
-): Promise<ProfileHandlerResponse> => {
+export const saveProfile = async (data: SaveProfileRequest): Promise<SaveProfileResponse> => {
+  const response = await postRequest({
+    path: ClientAPIRoutes.PROFILE_HANDLER.baseRoute(),
+    data,
+  });
+  return response.data;
+};
+
+export const getProfile = async (data: GetProfileRequest): Promise<GetProfileResponse> => {
   const response = await postRequest({
     path: ClientAPIRoutes.PROFILE_HANDLER.baseRoute(),
     data,

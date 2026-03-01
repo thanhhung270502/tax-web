@@ -16,7 +16,7 @@ export const LoginForm = ({ methods, onSubmit, isSubmitting }: LoginFormProps) =
         placeholder="you@example.com"
       />
       <div className="pt-4xl">
-        <Button variant="contained-secondary" className="w-full" loading={isSubmitting}>
+        <Button variant="secondary" className="w-full" loading={isSubmitting}>
           Continue
         </Button>
       </div>

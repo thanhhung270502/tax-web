@@ -1,4 +1,7 @@
+"use client";
+
 import { useWatch } from "react-hook-form";
+import Image from "next/image";
 
 import { CenterCard, Typography } from "@/shared";
 
@@ -12,10 +15,10 @@ export const OtpStepPage = (props: OtpStepPageProps) => {
   const email = useWatch({ control: methods.control, name: "email" });
 
   return (
-    <CenterCard>
+    <CenterCard wrapperClassName="relative">
       <div className="gap-4xl flex flex-col">
-        <div className="bg-gradient-brand-secondary m-auto flex size-20 items-center justify-center rounded-lg text-3xl">
-          🔐
+        <div className="flex items-center justify-center">
+          <Image src={"/images/ktancpa-logo.png"} alt="Reviva" width={100} height={28} priority />
         </div>
         <div className="gap-xs flex flex-col items-center justify-center">
           <Typography variant="heading-xl" weight="semibold">

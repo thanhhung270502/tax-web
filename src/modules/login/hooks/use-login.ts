@@ -2,12 +2,12 @@
 
 import { useState } from "react";
 import { useForm } from "react-hook-form";
-import { EmailHandlerAction } from "@common";
+import { BaseHandlerAction } from "@common";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { z } from "zod";
 
 import { logger } from "@/libs/logger";
-import { useProfileHandlerMutation } from "@/shared";
+import { useSendOTPMutation } from "@/shared";
 
 import { LoginSteps } from "../enums";
 
@@ -29,21 +29,19 @@ export const useLogin = () => {
     },
   });
 
-  const profileHandlerMutation = useProfileHandlerMutation();
+  const sendOTPMutation = useSendOTPMutation();
 
   const onSubmit = methods.handleSubmit(async (data) => {
     try {
-      if (step === LoginSteps.EMAIL) {
-        await profileHandlerMutation.mutateAsync({
-          action: EmailHandlerAction.SEND_OTP,
-          email: data.email,
-        });
-        setStep(LoginSteps.OTP);
-      }
+      await sendOTPMutation.mutateAsync({
+        action: BaseHandlerAction.SEND_OTP,
+        email: data.email,
+      });
+      setStep(LoginSteps.OTP);
     } catch (error) {
       logger.error(`Failed to send OTP: ${error}`);
     }
   });
 
-  return { methods, onSubmit, isSubmitting: profileHandlerMutation.isPending, step, setStep };
+  return { methods, onSubmit, isSubmitting: sendOTPMutation.isPending, step, setStep };
 };
