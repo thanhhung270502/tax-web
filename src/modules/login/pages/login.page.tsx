@@ -22,7 +22,7 @@ export const LoginPage = () => {
     if (loginSession.value) {
       const loginSessionData = loginSession.value as unknown as TLoginSession;
       if (new Date(loginSessionData.expiresAt) > new Date()) {
-        router.push(ClientRoutes.Profile);
+        router.push(ClientRoutes.NewProfile);
       }
     }
   }, [router]);
